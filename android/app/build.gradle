@@ -1,0 +1,46 @@
+plugins {
+    id 'com.android.application'
+    id 'com.chaquo.python'
+}
+android {
+    namespace 'london.setfinder'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'london.setfinder'
+        minSdk 26
+        targetSdk 35
+        versionCode 1
+        versionName '0.1.0-preview'
+        ndk { abiFilters.addAll(project.hasProperty('phoneOnly') ? ['arm64-v8a'] : ['arm64-v8a', 'x86_64']) }
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    packaging { jniLibs { useLegacyPackaging true } }
+}
+dependencies {
+    androidTestImplementation 'androidx.test:runner:1.6.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+}
+chaquopy {
+    defaultConfig {
+        version '3.10'
+        if (System.getenv('SETFINDER_BUILD_PYTHON')) buildPython System.getenv('SETFINDER_BUILD_PYTHON')
+        pip {
+            install 'numpy==1.23.3'
+            install 'scipy==1.8.1'
+            install 'psutil==7.1.3'
+        }
+    }
+}
+// Package the real desktop engine, not a divergent reimplementation. Only
+// explicitly selected source files are copied; never private audio or indexes.
+def stageEngine = tasks.register('stageEngine', Copy) {
+    from('../..') { include 'techno_id.py'; include 'vendor/audfprint/*.py'; include 'vendor/audfprint/LICENSE'; include 'vendor/NOTICE.txt' }
+    into layout.buildDirectory.dir('generated/python')
+}
+chaquopy.sourceSets.main.srcDir layout.buildDirectory.dir('generated/python')
+tasks.configureEach { if ((name.startsWith('generate') || name.startsWith('merge')) && name.contains('Python')) dependsOn(stageEngine) }
+tasks.named('preBuild').configure { dependsOn(stageEngine) }

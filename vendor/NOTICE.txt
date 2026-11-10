@@ -1,0 +1,6 @@
+audfprint files are unmodified from https://github.com/dpwe/audfprint
+Commit: cb03ba99feafd41b8874307f0f4e808a6ce34362
+MIT license: see audfprint/LICENSE. Copyright Dan Ellis, Columbia University,
+and Google. stft.py contains its upstream attribution.
+Only fingerprint extraction/matching are used. Our SQLite adapter does not
+load audfprint pickle databases.

@@ -1,0 +1,5 @@
+# Exact environment used for the synthetic smoke tests, Python 3.11 / Linux.
+imageio-ffmpeg==0.7.0
+numpy==2.4.6
+psutil==7.2.2
+scipy==1.17.1

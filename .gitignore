@@ -1,0 +1,24 @@
+.venv/
+__pycache__/
+data/
+*.sqlite*
+*.wav
+*.mp3
+*.flac
+
+# Local configuration, credentials, and generated builds
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.jks
+*.keystore
+*.apk
+*.aab
+.DS_Store
+
+# These three bundled WAVs are generated demo fixtures, not private music.
+!android/app/src/main/assets/demo/demo-mix.wav
+!android/app/src/main/assets/demo/demo-reference-0.wav
+!android/app/src/main/assets/demo/demo-reference-1.wav
